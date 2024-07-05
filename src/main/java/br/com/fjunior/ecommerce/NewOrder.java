@@ -14,37 +14,20 @@ import java.util.concurrent.ExecutionException;
 public class NewOrder {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        KafkaProducer<String, String> producer = new KafkaProducer<String, String>(properties());
-        //for (var i = 0; i < 100; i++) {
-            var key = UUID.randomUUID().toString();
-            var value = "12345,6789,15468945";
-            var record = new ProducerRecord<>("ECOMMERCE_NEW_ORDER", key, value);
 
-            Callback callback = (data, ex) ->
-            {
-                if (ex != null) {
-                    ex.printStackTrace();
-                    return;
-                }
-                System.out.println("Sucesso enviando " + data.topic() + ":::partition " + data.partition() + "/offset" + data.offset() + "/timestamp" + data.timestamp());
-            };
+        try(var dispacher = new KafkaDispatcher()) {
 
-            var email = "Thank you for your order! We are processing your order!";
-            var emailRecord = new ProducerRecord<>("ECOMMERCE_SEND_EMAIL", email, email);
+            for (var i = 0; i < 10; i++) {
+                var key = UUID.randomUUID().toString();
 
-            producer.send(record, callback).get();
-            producer.send(emailRecord, callback).get();
-        //}
+                var value = "12345,6789,15468945";
+                dispacher.send("ECOMMERCE_NEW_ORDER", key, value);
+
+                var email = "Thank you for your order! We are processing your order!";
+                dispacher.send("ECOMMERCE_SEND_EMAIL", key, email);
+            }
+        }
     }
 
-    private static Properties properties() {
-        var properties = new Properties();
 
-        properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
-        //Serializadores de String para Bytes
-        properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-
-        return properties;
-    }
 }
