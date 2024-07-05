@@ -51,6 +51,8 @@ public class FraudDetectorService {
         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, FraudDetectorService.class.getSimpleName());
         //Adicionando nome ao consumidor
         properties.setProperty(ConsumerConfig.CLIENT_ID_CONFIG, FraudDetectorService.class.getSimpleName() + "-" + UUID.randomUUID().toString());
+        //Máximo de records a ser consumido.
+        properties.setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "1");
 
         return properties;
     }
