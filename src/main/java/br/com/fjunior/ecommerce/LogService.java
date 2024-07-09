@@ -10,7 +10,7 @@ public class LogService {
     public static void main(String[] args) {
         var logService = new LogService();
         try ( var service = new KafkaService(logService.getClass().getSimpleName(),
-                Pattern.compile("ECOMMERCE.*"), logService::parse)){
+                Pattern.compile("ECOMMERCE.*"), logService::parse, String.class)){
             service.run();
         }
     }
