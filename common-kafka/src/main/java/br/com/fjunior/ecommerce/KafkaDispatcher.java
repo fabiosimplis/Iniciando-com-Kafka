@@ -10,11 +10,11 @@ import java.io.Closeable;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
-class KafkaDispatcher<T> implements Closeable {
+public class KafkaDispatcher<T> implements Closeable {
 
     private final KafkaProducer<String, T> producer;
 
-    KafkaDispatcher() {
+    public KafkaDispatcher() {
         this.producer = new KafkaProducer<>(properties());
     }
 
@@ -29,7 +29,7 @@ class KafkaDispatcher<T> implements Closeable {
         return properties;
     }
 
-    void send(String topic, String key, T value) throws ExecutionException, InterruptedException {
+    public void send(String topic, String key, T value) throws ExecutionException, InterruptedException {
         var record = new ProducerRecord<>(topic, key, value);
         Callback callback = (data, ex) ->
         {
@@ -39,9 +39,6 @@ class KafkaDispatcher<T> implements Closeable {
             }
             System.out.println("Sucesso enviando " + data.topic() + ":::partition " + data.partition() + "/offset" + data.offset() + "/timestamp" + data.timestamp());
         };
-
-
-
         producer.send(record, callback).get();
     }
 
