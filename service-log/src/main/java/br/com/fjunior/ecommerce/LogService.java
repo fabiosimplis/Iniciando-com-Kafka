@@ -4,7 +4,13 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Map;
+import java.util.TimeZone;
+import java.util.Timer;
 import java.util.regex.Pattern;
 
 
@@ -24,6 +30,7 @@ public class LogService {
     private void parse(ConsumerRecord<String, String> record) {
 
         System.out.println("-----------------------------------------");
+        System.out.println("TIME: " + LocalTime.now());
         System.out.println("LOG: " + record.topic());
         System.out.println(record.key());
         System.out.println(record.value());
