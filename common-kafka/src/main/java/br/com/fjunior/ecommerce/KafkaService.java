@@ -33,15 +33,22 @@ class KafkaService<T> implements Closeable {
         this.consumer = new KafkaConsumer(getProperties(type, groupId, properties));
     }
 
-    void run(){
+    void run() {
         //Pergunta se há mensagem, mas só por um tempo
         while (true) {
             var records = consumer.poll(Duration.ofMillis(100));
 
             if (!records.isEmpty()) {
-                System.out.println("Encontrei "+records.count()+" registros");
+                System.out.println("\nEncontrei "+records.count()+" registros");
                 for (var record : records) {
-                    parse.consume(record);
+                    try {
+                        parse.consume(record);
+                    } catch (Exception e) {
+                        // only catches Exception because no matter which Exception
+                        // I want to recover and parse the next one
+                        // so far, just logging the exception for this message
+                        e.printStackTrace();
+                    }
                 }
             }
         }
