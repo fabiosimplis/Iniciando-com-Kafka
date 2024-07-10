@@ -55,6 +55,4 @@ public class FraudDetectorService {
         return order.getAmount().compareTo(new BigDecimal("4500")) >= 0;
     }
 
-
-
 }
