@@ -14,9 +14,14 @@ public class CreateUserService {
     CreateUserService() throws SQLException {
         String url = "jdbc:sqlite:target/users_database.db";
         connection = DriverManager.getConnection(url);
-        connection.createStatement().execute("CREATE TABLE Users ("+
-                "uuid varchar(200) primary key," +
-                "email varchar(200))");
+        try {
+               connection.createStatement().execute("CREATE TABLE Users (" +
+                    "uuid varchar(200) primary key," +
+                    "email varchar(200))");
+        } catch (SQLException ex){
+            // be careful, the sql could be wrong, be really careful
+            ex.printStackTrace();
+        }
     }
 
     public static void main(String[] args) throws SQLException {
@@ -26,7 +31,7 @@ public class CreateUserService {
                 "ECOMMERCE_NEW_ORDER",
                 createUserService::parse,
                 Order.class,
-                new HashMap<String, String>())) {
+                new HashMap<>())) {
             service.run();
         }
     }
@@ -40,23 +45,23 @@ public class CreateUserService {
         var order = record.value();
         if (isNewUser(order.getEmail()))
         {
-            insertNewUser(order.getEmail());
+            insertNewUser(order.getUserId(), order.getEmail());
         }
     }
 
-    private void insertNewUser(String email) throws SQLException {
+    private void insertNewUser(String uuid, String email) throws SQLException {
         var insert = connection.prepareStatement("INSERT INTO Users (uuid, email)" +
                 "values (?,?)");
 
-        insert.setString(1, "uuid");
+        insert.setString(1, uuid);
         insert.setString(2, email);
         insert.execute();
-        System.out.println("User uuid e" + email + " adicionado");
+        System.out.println("User uuid e " + email + " adicionado");
     }
 
     private boolean isNewUser(String email) throws SQLException {
 
-        var exists = connection.prepareStatement("SELECT uuid FROM Users" +
+        var exists = connection.prepareStatement("SELECT uuid FROM Users " +
                 "WHERE email = ? LIMIT 1");
         exists.setString(1,email);
         var result = exists.executeQuery();
