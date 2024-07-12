@@ -37,8 +37,6 @@ public class ReadingReportService {
 
         System.out.println("File created " + target.getAbsolutePath());
 
-
-
     }
 
 }
