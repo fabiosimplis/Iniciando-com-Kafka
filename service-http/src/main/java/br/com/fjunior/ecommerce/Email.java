@@ -1,4 +1,4 @@
-package br.com.alura.ecommerce;
+package br.com.fjunior.ecommerce;
 
 public class Email {
 
