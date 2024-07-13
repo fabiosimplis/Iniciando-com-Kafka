@@ -17,10 +17,10 @@ public class NewOrder {
                     var orderId = UUID.randomUUID().toString();
                     var amount = new BigDecimal(Math.random() * 5000 + 1);
                     var order = new Order(orderId, amount, email);
-                    orderDispacher.send("ECOMMERCE_NEW_ORDER", email, order);
+                    orderDispacher.send("ECOMMERCE_NEW_ORDER", email, new CorrelationId(NewOrder.class.getSimpleName()), order);
 
                     Email emailMessage = new Email("Ecommerce","Thank you for your order " + orderId + "!\nWe are processing your order!");
-                    emailDispacher.send("ECOMMERCE_SEND_EMAIL", email, emailMessage);
+                    emailDispacher.send("ECOMMERCE_SEND_EMAIL", email, new CorrelationId(NewOrder.class.getSimpleName()), emailMessage);
                 }
             }
         }

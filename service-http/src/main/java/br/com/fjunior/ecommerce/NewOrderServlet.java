@@ -33,18 +33,16 @@ public class NewOrderServlet extends HttpServlet {
             var orderId = UUID.randomUUID().toString();
             var amount = new BigDecimal(req.getParameter("amount"));
             var order = new Order(orderId, amount, email);
-            orderDispacher.send("ECOMMERCE_NEW_ORDER", email, order);
+            orderDispacher.send("ECOMMERCE_NEW_ORDER", email, new CorrelationId(NewOrderServlet.class.getSimpleName()), order);
 
             Email emailMessage = new Email("Ecommerce","Thank you for your order " + orderId + "!\nWe are processing your order!");
-            emailDispacher.send("ECOMMERCE_SEND_EMAIL", email, emailMessage);
+            emailDispacher.send("ECOMMERCE_SEND_EMAIL", email, new CorrelationId(NewOrderServlet.class.getSimpleName()), emailMessage);
 
             System.out.println("New order sent successfully");
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.getWriter().println("New order sent successfully");
 
-        } catch (ExecutionException e) {
-            throw new ServletException(e);
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             throw new ServletException(e);
         }
 
