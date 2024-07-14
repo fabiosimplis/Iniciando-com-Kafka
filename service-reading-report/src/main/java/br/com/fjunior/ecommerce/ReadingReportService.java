@@ -6,13 +6,14 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
 
 
 public class ReadingReportService {
 
     private final Path SOURCE = new File("src/main/resources/report.txt").toPath();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
 
         var reportService = new ReadingReportService();
         try(var service = new KafkaService<>(ReadingReportService.class.getSimpleName(),
