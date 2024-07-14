@@ -1,5 +1,8 @@
-package br.com.fjunior.ecommerce;
+package br.com.fjunior.ecommerce.consumer;
 
+import br.com.fjunior.ecommerce.Message;
+import br.com.fjunior.ecommerce.dispacher.GsonSerializer;
+import br.com.fjunior.ecommerce.dispacher.KafkaDispatcher;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -13,17 +16,17 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 
-class KafkaService<T> implements Closeable {
+public class KafkaService<T> implements Closeable {
 
     private final KafkaConsumer<String, Message<T>> consumer;
     private final ConsumerFunction parse;
 
-    KafkaService(String groupId, String topic, ConsumerFunction<T> parse, Map<String,String> properties) {
+    public KafkaService(String groupId, String topic, ConsumerFunction<T> parse, Map<String,String> properties) {
         this(parse, groupId, properties);
         consumer.subscribe(Collections.singletonList(topic));
     }
 
-    KafkaService(String groupId, Pattern topic, ConsumerFunction<T> parse, Map<String,String> properties) {
+    public KafkaService(String groupId, Pattern topic, ConsumerFunction<T> parse, Map<String,String> properties) {
         this(parse, groupId, properties);
         consumer.subscribe(topic);
     }
@@ -33,7 +36,7 @@ class KafkaService<T> implements Closeable {
         this.consumer = new KafkaConsumer<>(getProperties(groupId, properties));
     }
 
-    void run() throws ExecutionException, InterruptedException {
+    public void run() throws ExecutionException, InterruptedException {
         //Pergunta se há mensagem, mas só por um tempo
         try(var deadLetterDispacher = new KafkaDispatcher<>()){
             while (true) {

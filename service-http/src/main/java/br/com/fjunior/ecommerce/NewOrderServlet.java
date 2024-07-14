@@ -1,5 +1,6 @@
 package br.com.fjunior.ecommerce;
 
+import br.com.fjunior.ecommerce.dispacher.KafkaDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,14 +14,11 @@ import java.util.concurrent.ExecutionException;
 public class NewOrderServlet extends HttpServlet {
 
     private final KafkaDispatcher<Order> orderDispacher = new KafkaDispatcher<>();
-    private final KafkaDispatcher<Email> emailDispacher = new KafkaDispatcher<>();
-
 
     @Override
     public void destroy() {
         super.destroy();
         orderDispacher.close();
-        emailDispacher.close();
     }
 
     @Override
@@ -34,9 +32,6 @@ public class NewOrderServlet extends HttpServlet {
             var amount = new BigDecimal(req.getParameter("amount"));
             var order = new Order(orderId, amount, email);
             orderDispacher.send("ECOMMERCE_NEW_ORDER", email, new CorrelationId(NewOrderServlet.class.getSimpleName()), order);
-
-            Email emailMessage = new Email("Ecommerce","Thank you for your order " + orderId + "!\nWe are processing your order!");
-            emailDispacher.send("ECOMMERCE_SEND_EMAIL", email, new CorrelationId(NewOrderServlet.class.getSimpleName()), emailMessage);
 
             System.out.println("New order sent successfully");
             resp.setStatus(HttpServletResponse.SC_OK);
