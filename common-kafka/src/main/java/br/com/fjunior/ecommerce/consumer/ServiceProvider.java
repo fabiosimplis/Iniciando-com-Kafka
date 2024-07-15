@@ -1,6 +1,4 @@
-package br.com.fjunior.ecommerce;
-
-import br.com.fjunior.ecommerce.consumer.KafkaService;
+package br.com.fjunior.ecommerce.consumer;
 
 import java.util.Map;
 import java.util.concurrent.Callable;

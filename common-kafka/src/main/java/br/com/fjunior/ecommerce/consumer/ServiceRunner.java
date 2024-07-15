@@ -1,4 +1,4 @@
-package br.com.fjunior.ecommerce;
+package br.com.fjunior.ecommerce.consumer;
 
 import java.util.concurrent.Executors;
 

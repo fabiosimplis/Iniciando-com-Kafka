@@ -1,5 +1,7 @@
 package br.com.fjunior.ecommerce;
 
+import br.com.fjunior.ecommerce.consumer.ConsumerService;
+import br.com.fjunior.ecommerce.consumer.ServiceRunner;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import java.util.concurrent.ExecutionException;
