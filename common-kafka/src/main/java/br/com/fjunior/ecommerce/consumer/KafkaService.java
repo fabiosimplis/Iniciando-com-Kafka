@@ -73,7 +73,7 @@ public class KafkaService<T> implements Closeable {
         //Máximo de records a ser consumido.
         properties.setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "1");
         //OFFSET "latest" VS "earliest"
-        properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "smallest");
+        properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         //Override properties
         properties.putAll(overrideProperties);
 
