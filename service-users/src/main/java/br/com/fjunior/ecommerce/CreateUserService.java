@@ -5,10 +5,8 @@ import br.com.fjunior.ecommerce.consumer.ConsumerService;
 import br.com.fjunior.ecommerce.consumer.ServiceRunner;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 
 public class CreateUserService implements ConsumerService<Order> {
 
@@ -21,7 +19,7 @@ public class CreateUserService implements ConsumerService<Order> {
                 "email varchar(200))");
     }
 
-    public static void main(String[] args) throws SQLException, ExecutionException, InterruptedException {
+    public static void main(String[] args) {
 
         new ServiceRunner<>(CreateUserService::new).start(1);
     }
