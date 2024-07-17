@@ -67,7 +67,6 @@ public class FraudDetectorService implements ConsumerService<Order> {
     }
 
     private boolean wasProcessed(Order order) throws SQLException {
-
         ResultSet results = database.query("SELECT uuid FROM Orders WHERE uuid = ? LIMIT 1", order.getOrderId());
         return results.next();
     }
